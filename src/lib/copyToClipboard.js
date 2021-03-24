@@ -1,5 +1,3 @@
-import { themeOptions } from "../options/themes";
-
 const getThemeBackgroundColor = (HTMLVal) => {
   let codeMirror = HTMLVal.querySelector(".CodeMirror");
   let styles = getComputedStyle(codeMirror);

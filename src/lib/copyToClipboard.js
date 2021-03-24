@@ -1,60 +1,67 @@
-function copyToClipboard(HTMLVal, lineNumbers, table) {
-  var doc = document,
-    range,
-    selection;
+import { themeOptions } from "../options/themes";
 
-  const td = table.querySelector("td");
-  td.innerHTML = "";
+const getThemeBackgroundColor = (HTMLVal) => {
+  let codeMirror = HTMLVal.querySelector(".CodeMirror");
+  let styles = getComputedStyle(codeMirror);
+  return styles["background-color"];
+};
 
-  let a = HTMLVal.querySelector(".CodeMirror");
-  let b = getComputedStyle(a);
-  const color = b["background-color"];
-  td.style.backgroundColor = color;
+const addLineNumber = (element, number) => {
+  element.insertAdjacentHTML(
+    "afterbegin",
+    `<span>${number + (number < 10 && "&nbsp;")}|&#9;&#9;</span>`
+  );
+};
 
-  const clone = HTMLVal.querySelector(".CodeMirror-wrap").cloneNode(true);
+const resetTableAndReturnCells = (table) => {
+  const [td1, td2, td3] = table.querySelectorAll("td");
+  td2.innerHTML = "";
+  return [td1, td2, td3];
+};
 
-  const preTags = clone.querySelectorAll("pre");
+const getLinesOfCode = (element) => element.querySelectorAll("pre");
 
-  [].forEach.call(preTags, (tag, index) => {
-    tag.style.fontFamily = "monospace";
+const cloneCodeElement = (HTMLVal) =>
+  HTMLVal.querySelector(".CodeMirror-wrap").cloneNode(true);
 
-    tag.insertAdjacentHTML("afterend", "<p>");
+function copyToClipboard(HTMLVal, lineNumbers, table, start) {
+  const cloneOfCode = cloneCodeElement(HTMLVal);
+  const [firstTableCell, tableCell, lastTableCell] = resetTableAndReturnCells(
+    table
+  );
+
+  const themeBgColor = getThemeBackgroundColor(HTMLVal);
+  firstTableCell.style.backgroundColor = themeBgColor;
+  tableCell.style.backgroundColor = themeBgColor;
+  lastTableCell.style.backgroundColor = themeBgColor;
+
+  // Add the code into the offscreen table
+  tableCell.appendChild(cloneOfCode);
+
+  const lines = getLinesOfCode(tableCell);
+
+  [].forEach.call(lines, (line, index) => {
+    line.style.fontFamily = "monospace";
+    line.insertAdjacentHTML("beforeend", "<p>");
     if (lineNumbers) {
-      tag.insertAdjacentHTML(
-        "afterbegin",
-        // `<span>${index + (index < 10 && "&nbsp;")}|&nbsp;&nbsp;</span>`
-        `<span>${index + (index < 10 && "&nbsp;")}|&#9;&#9;</span>`
-      );
+      addLineNumber(line, index + start);
     }
   });
 
-  td.appendChild(clone);
-  td.setAttribute("spellcheck", false);
-  // let p = document.createElement("p");
-  // p.setAttribute("spellcheck", false);
-  // p.appendChild(td);
-  // console.log(td.innerHTML);
-
+  const doc = document;
   if (doc.body.createTextRange) {
-    range = doc.body.createTextRange();
+    const range = doc.body.createTextRange();
     range.moveToElementText(table);
     range.select();
   } else if (window.getSelection) {
-    selection = window.getSelection();
-    range = doc.createRange();
+    const selection = window.getSelection();
+    const range = doc.createRange();
     range.selectNodeContents(table);
-    console.log(range);
     selection.removeAllRanges();
     selection.addRange(range);
   }
-  document.execCommand("copy");
+  doc.execCommand("copy");
   window.getSelection().removeAllRanges();
-  const allLineBreaks = clone.querySelectorAll("p");
-  setTimeout(() => {
-    [].forEach.call(allLineBreaks, (el) => {
-      el.remove();
-    });
-  }, 0);
 }
 
 export { copyToClipboard };

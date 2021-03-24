@@ -1,19 +1,14 @@
-const languages = [
-  { value: "javascript", text: "JavaScript" },
-  { value: "lua", text: "Lua" },
-  { value: "ruby", text: "Ruby" },
-  { value: "php", text: "PHP" },
-  { value: "htmlembedded", text: "HTML" },
-];
-
-const themes = [
-  { value: "material", text: "material" },
-  { value: "3024-day", text: "3024-day" },
-  { value: "base16-light", text: "base16-light" },
-  { value: "duotone-light", text: "duotone-light" },
-  { value: "eclipse", text: "eclipse" },
-  { value: "elegant", text: "elegant" },
-];
+import { StoreContext } from "./contexts/store";
+import { useContext } from "react";
+import { languageOptions } from "./options/languages";
+import { themeOptions } from "./options/themes";
+import {
+  changeTheme,
+  changeLanguage,
+  changeFontSize,
+  toggleLineNumbers,
+  changeLineNumberStart,
+} from "./contexts/store";
 
 const Options = ({ options }) => {
   return options.map(({ value, text }) => (
@@ -23,16 +18,9 @@ const Options = ({ options }) => {
   ));
 };
 
-export const ControlPanel = ({
-  setLineNumbers,
-  lineNumbers,
-  setFontSize,
-  fontSize,
-  setTheme,
-  theme,
-  mode,
-  setMode,
-}) => {
+export const ControlPanel = ({ dispatch }) => {
+  const store = useContext(StoreContext);
+
   return (
     <div className="level has-text-light">
       <div className="level-item has-text-centered">
@@ -40,10 +28,24 @@ export const ControlPanel = ({
           <label className="checkbox mr-2">Line numbers</label>
           <input
             type="checkbox"
-            checked={lineNumbers}
-            onChange={({ target }) => setLineNumbers(target.checked)}
+            checked={store.lineNumbers}
+            onChange={() => dispatch(toggleLineNumbers())}
           />
         </div>
+      </div>
+
+      <div className="level-item has-text-centered">
+        <label className="mr-2">Line number start</label>
+        <input
+          className="input"
+          disabled={!store.lineNumbers}
+          type="number"
+          value={store.lineNumberStart}
+          style={{ maxWidth: "70px" }}
+          onChange={({ target }) =>
+            dispatch(changeLineNumberStart(target.value))
+          }
+        />
       </div>
 
       <div className="level-item has-text-centered">
@@ -51,9 +53,9 @@ export const ControlPanel = ({
         <input
           className="input"
           type="number"
-          value={fontSize}
+          value={store.fontSize}
           style={{ maxWidth: "70px" }}
-          onChange={({ target }) => setFontSize(target.value)}
+          onChange={({ target }) => dispatch(changeFontSize(target.value))}
         />
       </div>
 
@@ -61,12 +63,10 @@ export const ControlPanel = ({
         <label className="mr-2">Theme</label>
         <div className="select">
           <select
-            value={theme}
-            onChange={({ target }) => {
-              setTheme(target.value);
-            }}
+            value={store.currentTheme}
+            onChange={({ target }) => dispatch(changeTheme(target.value))}
           >
-            <Options options={themes} />
+            <Options options={themeOptions} />
           </select>
         </div>
       </div>
@@ -75,12 +75,10 @@ export const ControlPanel = ({
         <label className="mr-2">Language</label>
         <div className="select">
           <select
-            value={mode}
-            onChange={({ target }) => {
-              setMode(target.value);
-            }}
+            value={store.currentLanguage}
+            onChange={({ target }) => dispatch(changeLanguage(target.value))}
           >
-            <Options options={languages} />
+            <Options options={languageOptions} />
           </select>
         </div>
       </div>

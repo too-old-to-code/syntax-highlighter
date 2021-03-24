@@ -4,3 +4,6 @@ import "codemirror/mode/php/php";
 import "codemirror/mode/ruby/ruby";
 import "codemirror/mode/xml/xml";
 import "codemirror/mode/htmlembedded/htmlembedded";
+import "codemirror/mode/python/python";
+import "codemirror/mode/sql/sql";
+import "codemirror/mode/clike/clike";

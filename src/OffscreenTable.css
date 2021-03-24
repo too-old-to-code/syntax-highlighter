@@ -1,0 +1,13 @@
+.offscreen {
+  position: absolute;
+  left: 10000px;
+}
+
+table {
+  position: absolute;
+  border: 0;
+}
+
+td {
+  border: 0;
+}

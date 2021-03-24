@@ -196,21 +196,22 @@ function App() {
                   return (
                     <div className="control" key={savedCode.date}>
                       <div className="tags has-addons">
-                        <a
+                        <span
                           className="tag is-button is-primary"
+                          style={{ cursor: "pointer" }}
                           onClick={() => {
                             setValue(savedCode.text);
                             dispatch(changeLanguage(savedCode.lang));
                           }}
                         >
                           {savedCode.title}
-                        </a>
-                        <a
+                        </span>
+                        <span
                           className="tag is-delete"
                           onClick={() => {
                             dispatch(deleteCode(savedCode.date));
                           }}
-                        ></a>
+                        ></span>
                       </div>
                     </div>
                   );

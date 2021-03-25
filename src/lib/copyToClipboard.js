@@ -12,9 +12,9 @@ const addLineNumber = (element, number) => {
 };
 
 const resetTableAndReturnCells = (table) => {
-  const [td1, td2, td3] = table.querySelectorAll("td");
-  td2.innerHTML = "";
-  return [td1, td2, td3];
+  const [td] = table.querySelectorAll("td");
+  td.innerHTML = "";
+  return [td];
 };
 
 const getLinesOfCode = (element) => element.querySelectorAll("pre");
@@ -24,14 +24,10 @@ const cloneCodeElement = (HTMLVal) =>
 
 function copyToClipboard(HTMLVal, lineNumbers, table, start) {
   const cloneOfCode = cloneCodeElement(HTMLVal);
-  const [firstTableCell, tableCell, lastTableCell] = resetTableAndReturnCells(
-    table
-  );
+  const [tableCell] = resetTableAndReturnCells(table);
 
   const themeBgColor = getThemeBackgroundColor(HTMLVal);
-  firstTableCell.style.backgroundColor = themeBgColor;
   tableCell.style.backgroundColor = themeBgColor;
-  lastTableCell.style.backgroundColor = themeBgColor;
 
   // Add the code into the offscreen table
   tableCell.appendChild(cloneOfCode);

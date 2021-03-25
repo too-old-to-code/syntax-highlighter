@@ -7,7 +7,7 @@ const getThemeBackgroundColor = (HTMLVal) => {
 const addLineNumber = (element, number) => {
   element.insertAdjacentHTML(
     "afterbegin",
-    `<span>${number + (number < 10 && "&nbsp;")}|&#9;&#9;</span>`
+    `<span>${number + (number < 10 && "&nbsp;")}|&nbsp;</span>`
   );
 };
 

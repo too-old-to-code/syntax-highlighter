@@ -15,6 +15,7 @@ export const OffscreenTable = React.forwardRef(({ fontSize }, ref) => {
           <tr>
             <td></td>
           </tr>
+          <tr></tr>
         </tbody>
       </table>
     </div>

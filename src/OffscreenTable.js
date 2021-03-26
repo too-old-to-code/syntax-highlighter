@@ -10,10 +10,10 @@ export const OffscreenTable = React.forwardRef(({ fontSize }, ref) => {
           position: "relative",
         }}
       >
-        <table ref={ref}>
+        <table ref={ref} className="table">
           <tbody>
             <tr>
-              <td></td>
+              <td className="td"></td>
             </tr>
           </tbody>
         </table>
@@ -21,3 +21,24 @@ export const OffscreenTable = React.forwardRef(({ fontSize }, ref) => {
     </pre>
   );
 });
+
+// export const OffscreenTable = React.forwardRef(({ fontSize }, ref) => {
+//   return (
+//     <pre style={{ padding: 0 }} className="offscreen">
+//       <div
+//         style={{
+//           fontSize: `${fontSize}pt`,
+//           position: "relative",
+//         }}
+//       >
+//         <textarea ref={ref} className="table">
+//           <pre>
+//             <div>
+//               <div className="td"></div>
+//             </div>
+//           </pre>
+//         </textarea>
+//       </div>
+//     </pre>
+//   );
+// });

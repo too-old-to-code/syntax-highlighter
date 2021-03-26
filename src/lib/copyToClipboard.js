@@ -17,6 +17,12 @@ const resetTableAndReturnCells = (table) => {
   return [td];
 };
 
+// const resetTableAndReturnCells = (table) => {
+//   const [td] = table.querySelectorAll(".td");
+//   td.innerHTML = "";
+//   return [td];
+// };
+
 const getLinesOfCode = (element) => element.querySelectorAll("pre");
 
 const cloneCodeElement = (HTMLVal) =>
@@ -25,6 +31,7 @@ const cloneCodeElement = (HTMLVal) =>
 function copyToClipboard(HTMLVal, lineNumbers, table, start) {
   const cloneOfCode = cloneCodeElement(HTMLVal);
   const [tableCell] = resetTableAndReturnCells(table);
+  console.log(tableCell);
 
   const themeBgColor = getThemeBackgroundColor(HTMLVal);
   tableCell.style.backgroundColor = themeBgColor;
@@ -35,6 +42,7 @@ function copyToClipboard(HTMLVal, lineNumbers, table, start) {
   const lines = getLinesOfCode(tableCell);
 
   [].forEach.call(lines, (line, index) => {
+    line.style.backgroundColor = themeBgColor;
     line.style.fontFamily = "monospace";
     line.insertAdjacentHTML("beforeend", "<p>");
     if (lineNumbers) {
@@ -48,13 +56,16 @@ function copyToClipboard(HTMLVal, lineNumbers, table, start) {
     range.moveToElementText(table);
     range.select();
   } else if (window.getSelection) {
+    console.log("herere");
     const selection = window.getSelection();
     const range = doc.createRange();
     range.selectNodeContents(table);
+    console.log("RAnge", range);
     selection.removeAllRanges();
     selection.addRange(range);
   }
-  doc.execCommand("copy");
+  let a = doc.execCommand("copy");
+  console.log(a);
   window.getSelection().removeAllRanges();
 }
 

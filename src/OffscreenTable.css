@@ -11,3 +11,13 @@ table {
 td {
   border: 0;
 }
+
+.table {
+  position: absolute;
+  border: 0;
+  background-color: blue;
+}
+
+.td {
+  border: 0;
+}

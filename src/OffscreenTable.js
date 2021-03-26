@@ -3,20 +3,21 @@ import React from "react";
 
 export const OffscreenTable = React.forwardRef(({ fontSize }, ref) => {
   return (
-    <div
-      className="offscreen"
-      style={{
-        fontSize: `${fontSize}pt`,
-      }}
-    >
-      <table ref={ref}>
-        <tbody>
-          <tr>
-            <td></td>
-          </tr>
-          <tr></tr>
-        </tbody>
-      </table>
-    </div>
+    <pre style={{ padding: 0 }}>
+      <div
+        className="offscreen"
+        style={{
+          fontSize: `${fontSize}pt`,
+        }}
+      >
+        <table ref={ref}>
+          <tbody>
+            <tr>
+              <td></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </pre>
   );
 });

@@ -6,7 +6,7 @@ export const OffscreenTable = React.forwardRef(({ fontSize }, ref) => {
     <pre style={{ padding: 0 }} className="offscreen">
       <div
         style={{
-          fontSize: `${fontSize}pt`,
+          // fontSize: `${fontSize}pt`,
           position: "relative",
         }}
       >

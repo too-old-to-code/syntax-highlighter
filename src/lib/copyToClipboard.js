@@ -37,7 +37,7 @@ function copyToClipboard(HTMLVal, lineNumbers, table, start, fontSize) {
 
   [].forEach.call(lines, (line, index) => {
     line.style.backgroundColor = themeBgColor;
-    line.style.fontSize = fontSize;
+    line.style.fontSize = `${fontSize}pt`;
     line.style.fontFamily = "monospace";
     line.insertAdjacentHTML("beforeend", "<p>");
     if (lineNumbers) {

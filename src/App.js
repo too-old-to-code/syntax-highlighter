@@ -180,7 +180,8 @@ function App() {
                         codeHTML.current.ref,
                         state.lineNumbers,
                         table.current,
-                        state.lineNumberStart
+                        state.lineNumberStart,
+                        fontSize
                       );
                     }}
                   >

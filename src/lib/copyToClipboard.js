@@ -17,18 +17,12 @@ const resetTableAndReturnCells = (table) => {
   return [td];
 };
 
-// const resetTableAndReturnCells = (table) => {
-//   const [td] = table.querySelectorAll(".td");
-//   td.innerHTML = "";
-//   return [td];
-// };
-
 const getLinesOfCode = (element) => element.querySelectorAll("pre");
 
 const cloneCodeElement = (HTMLVal) =>
   HTMLVal.querySelector(".CodeMirror-wrap").cloneNode(true);
 
-function copyToClipboard(HTMLVal, lineNumbers, table, start) {
+function copyToClipboard(HTMLVal, lineNumbers, table, start, fontSize) {
   const cloneOfCode = cloneCodeElement(HTMLVal);
   const [tableCell] = resetTableAndReturnCells(table);
   console.log(tableCell);
@@ -43,6 +37,7 @@ function copyToClipboard(HTMLVal, lineNumbers, table, start) {
 
   [].forEach.call(lines, (line, index) => {
     line.style.backgroundColor = themeBgColor;
+    line.style.fontSize = fontSize;
     line.style.fontFamily = "monospace";
     line.insertAdjacentHTML("beforeend", "<p>");
     if (lineNumbers) {

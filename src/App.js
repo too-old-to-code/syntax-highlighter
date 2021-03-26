@@ -181,7 +181,7 @@ function App() {
                         state.lineNumbers,
                         table.current,
                         state.lineNumberStart,
-                        fontSize
+                        state.fontSize
                       );
                     }}
                   >

@@ -25,19 +25,16 @@ const cloneCodeElement = (HTMLVal) =>
 function copyToClipboard(HTMLVal, lineNumbers, table, start, fontSize) {
   const cloneOfCode = cloneCodeElement(HTMLVal);
   const [tableCell] = resetTableAndReturnCells(table);
-  console.log(tableCell);
-
   const themeBgColor = getThemeBackgroundColor(HTMLVal);
-  tableCell.style.backgroundColor = themeBgColor;
+  tableCell.style.backgroundColor = themeBgColor; // needed for Word online
 
   // Add the code into the offscreen table
   tableCell.appendChild(cloneOfCode);
 
   const lines = getLinesOfCode(tableCell);
-  tableCell.insertAdjacentHTML("beforeend", "<pre><p></p></pre>");
 
   [].forEach.call(lines, (line, index) => {
-    line.style.backgroundColor = themeBgColor;
+    line.style.backgroundColor = themeBgColor; // needed for Word application
     line.style.fontSize = `${fontSize}pt`;
     line.style.fontFamily = "monospace";
     line.insertAdjacentHTML("beforeend", "<p>");
@@ -52,16 +49,13 @@ function copyToClipboard(HTMLVal, lineNumbers, table, start, fontSize) {
     range.moveToElementText(table);
     range.select();
   } else if (window.getSelection) {
-    console.log("herere");
     const selection = window.getSelection();
     const range = doc.createRange();
     range.selectNodeContents(table);
-    console.log("RAnge", range);
     selection.removeAllRanges();
     selection.addRange(range);
   }
-  let a = doc.execCommand("copy");
-  console.log(a);
+  doc.execCommand("copy");
   window.getSelection().removeAllRanges();
 }
 

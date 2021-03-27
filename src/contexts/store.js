@@ -8,9 +8,15 @@ const CHANGE_LINE_NUMBER_START = "CHANGE_LINE_NUMBER_START";
 const RESTORE_STATE = "RESTORE_STATE";
 const SAVE = "SAVE";
 const DELETE = "DELETE";
+const UPDATE_CODE = "UPDATE_CODE";
 
 export const restoreState = (payload) => ({
   type: RESTORE_STATE,
+  payload,
+});
+
+export const updateCode = (payload) => ({
+  type: UPDATE_CODE,
   payload,
 });
 
@@ -96,6 +102,21 @@ export const storeReducer = (state, action) => {
       return {
         ...state,
         saved: state.saved.filter((code) => code.date !== action.payload),
+      };
+    }
+    case UPDATE_CODE: {
+      const { saved } = state;
+      const index = saved.findIndex(
+        (code) => code.date === action.payload.date
+      );
+      const updatedSavedSnippets = [
+        ...saved.slice(0, index),
+        action.payload,
+        ...saved.slice(index + 1),
+      ];
+      return {
+        ...state,
+        saved: updatedSavedSnippets,
       };
     }
     default: {

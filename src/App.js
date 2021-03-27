@@ -13,10 +13,11 @@ import {
   saveCode,
   deleteCode,
   changeLanguage,
+  updateCode,
 } from "./contexts/store";
 import { OffscreenTable } from "./OffscreenTable";
 
-function saveSetup(state) {
+function saveSnippet(state) {
   const serializedState = JSON.stringify(state);
   localStorage.setItem("syntax-highlighter", serializedState);
 }
@@ -28,6 +29,7 @@ function App() {
   const table = useRef();
   const [showModal, setModal] = useState(false);
   const [title, setTitle] = useState("");
+  const [lastLoadedSnippet, setLastLoadedSnippet] = useState("");
 
   useEffect(() => {
     const serializedState = localStorage.getItem("syntax-highlighter");
@@ -40,7 +42,7 @@ function App() {
   }, []);
 
   useEffect(() => {
-    saveSetup(state);
+    saveSnippet(state);
   }, [state]);
 
   useEffect(() => {
@@ -63,8 +65,8 @@ function App() {
           <div className="card">
             <div className="card-content">
               <div className="content">
-                Give this snapshot a name. The snapshot will be stored in your
-                browser.
+                What will you save your code snippet as? The snippet will be
+                stored in your browser storage.
               </div>
               <div className="content">
                 <input
@@ -79,18 +81,18 @@ function App() {
                 <button
                   className="button is-success is-right"
                   onClick={() => {
+                    const newSnippet = {
+                      text: value,
+                      date: Date.now(),
+                      lang: state.currentLanguage,
+                      title: title,
+                    };
                     if (title) {
-                      dispatch(
-                        saveCode({
-                          text: value,
-                          date: Date.now(),
-                          lang: state.currentLanguage,
-                          title: title,
-                        })
-                      );
+                      dispatch(saveCode(newSnippet));
                       setTitle("");
+                      saveSnippet(state);
+                      setLastLoadedSnippet(newSnippet);
                     }
-                    saveSetup(state);
                     toggleModal();
                   }}
                 >
@@ -111,6 +113,7 @@ function App() {
         <OffscreenTable ref={table} fontSize={state.fontSize} />
         <div className="container">
           <PageTitle text="Code syntax highlighter for Word" />
+
           <ControlPanel dispatch={dispatch} />
 
           <div className="columns">
@@ -138,6 +141,9 @@ function App() {
                     inputStyle: "contenteditable",
                   }}
                   onBeforeChange={(editor, data, value) => {
+                    if (!value) {
+                      setLastLoadedSnippet("");
+                    }
                     setValue(value);
                   }}
                 />
@@ -152,7 +158,10 @@ function App() {
                 >
                   <button
                     className="button is-danger	"
-                    onClick={() => setValue("")}
+                    onClick={() => {
+                      setValue("");
+                      setLastLoadedSnippet("");
+                    }}
                   >
                     Clear
                   </button>
@@ -169,9 +178,21 @@ function App() {
                 >
                   <button
                     className="button has-background-info-light	"
-                    onClick={toggleModal}
+                    onClick={() => {
+                      const updatedData = {
+                        text: value,
+                        date: lastLoadedSnippet.date,
+                        lang: state.currentLanguage,
+                        title: lastLoadedSnippet.title,
+                      };
+                      if (lastLoadedSnippet) {
+                        dispatch(updateCode(updatedData));
+                      } else {
+                        toggleModal();
+                      }
+                    }}
                   >
-                    Snapshot
+                    {lastLoadedSnippet ? "Save" : "Save as"}
                   </button>
                   <button
                     className="button has-background-info-light	"
@@ -189,6 +210,7 @@ function App() {
                   </button>
                 </div>
               </div>
+
               <div
                 className="field is-grouped is-grouped-multiline"
                 style={{ margin: "3px auto", justifyContent: "center" }}
@@ -202,6 +224,7 @@ function App() {
                           style={{ cursor: "pointer" }}
                           onClick={() => {
                             setValue(savedCode.text);
+                            setLastLoadedSnippet(savedCode);
                             dispatch(changeLanguage(savedCode.lang));
                           }}
                         >
@@ -211,6 +234,9 @@ function App() {
                           className="tag is-delete"
                           onClick={() => {
                             dispatch(deleteCode(savedCode.date));
+                            if (lastLoadedSnippet.date === savedCode.date) {
+                              setLastLoadedSnippet("");
+                            }
                           }}
                         ></span>
                       </div>

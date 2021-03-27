@@ -34,6 +34,7 @@ function copyToClipboard(HTMLVal, lineNumbers, table, start, fontSize) {
   tableCell.appendChild(cloneOfCode);
 
   const lines = getLinesOfCode(tableCell);
+  tableCell.insertAdjacentHTML("beforeend", "<pre><p></p></pre>");
 
   [].forEach.call(lines, (line, index) => {
     line.style.backgroundColor = themeBgColor;

@@ -92,8 +92,8 @@ function App() {
                       setTitle("");
                       saveSnippet(state);
                       setLastLoadedSnippet(newSnippet);
+                      toggleModal();
                     }
-                    toggleModal();
                   }}
                 >
                   OK
@@ -147,68 +147,71 @@ function App() {
                     setValue(value);
                   }}
                 />
-                <div
-                  className="buttons"
-                  style={{
-                    position: "absolute",
-                    top: "10px",
-                    right: "10px",
-                    zIndex: 30,
-                  }}
-                >
-                  <button
-                    className="button is-danger	"
-                    onClick={() => {
-                      setValue("");
-                      setLastLoadedSnippet("");
+                {value && (
+                  <div
+                    className="buttons"
+                    style={{
+                      position: "absolute",
+                      top: "10px",
+                      right: "10px",
+                      zIndex: 30,
                     }}
                   >
-                    Clear
-                  </button>
-                </div>
-
-                <div
-                  className="buttons"
-                  style={{
-                    position: "absolute",
-                    bottom: "10px",
-                    right: "10px",
-                    zIndex: 30,
-                  }}
-                >
-                  <button
-                    className="button has-background-info-light	"
-                    onClick={() => {
-                      const updatedData = {
-                        text: value,
-                        date: lastLoadedSnippet.date,
-                        lang: state.currentLanguage,
-                        title: lastLoadedSnippet.title,
-                      };
-                      if (lastLoadedSnippet) {
-                        dispatch(updateCode(updatedData));
-                      } else {
-                        toggleModal();
-                      }
+                    <button
+                      className="button is-danger	"
+                      onClick={() => {
+                        setValue("");
+                        setLastLoadedSnippet("");
+                      }}
+                    >
+                      Clear
+                    </button>
+                  </div>
+                )}
+                {value && (
+                  <div
+                    className="buttons"
+                    style={{
+                      position: "absolute",
+                      bottom: "10px",
+                      right: "10px",
+                      zIndex: 30,
                     }}
                   >
-                    {lastLoadedSnippet ? "Save" : "Save as"}
-                  </button>
-                  <button
-                    className="button has-background-info-light	"
-                    onClick={() => {
-                      copyToClipboard(
-                        codeHTML.current.ref,
-                        state.lineNumbers,
-                        table.current,
-                        state.lineNumberStart,
-                        state.fontSize
-                      );
-                    }}
-                  >
-                    Copy
-                  </button>
-                </div>
+                    <button
+                      className="button has-background-info-light	"
+                      onClick={() => {
+                        const updatedData = {
+                          text: value,
+                          date: lastLoadedSnippet.date,
+                          lang: state.currentLanguage,
+                          title: lastLoadedSnippet.title,
+                        };
+                        if (lastLoadedSnippet) {
+                          dispatch(updateCode(updatedData));
+                        } else {
+                          toggleModal();
+                        }
+                      }}
+                    >
+                      {lastLoadedSnippet ? "Save" : "Save as"}
+                    </button>
+                    <button
+                      className="button has-background-info-light	"
+                      onClick={() => {
+                        copyToClipboard(
+                          codeHTML.current.ref,
+                          state.lineNumbers,
+                          table.current,
+                          state.lineNumberStart,
+                          state.fontSize
+                        );
+                      }}
+                    >
+                      Copy
+                    </button>
+                  </div>
+                )}
               </div>
 
               <div

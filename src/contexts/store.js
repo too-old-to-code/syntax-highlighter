@@ -9,6 +9,8 @@ const RESTORE_STATE = "RESTORE_STATE";
 const SAVE = "SAVE";
 const DELETE = "DELETE";
 const UPDATE_CODE = "UPDATE_CODE";
+const ADD_TOAST = "ADD_TOAST";
+const REMOVE_TOAST = "REMOVE_TOAST";
 
 export const restoreState = (payload) => ({
   type: RESTORE_STATE,
@@ -17,6 +19,21 @@ export const restoreState = (payload) => ({
 
 export const updateCode = (payload) => ({
   type: UPDATE_CODE,
+  payload,
+});
+
+export const addToast = (payload, dispatch) => {
+  const payloadWithDate = { ...payload, date: Date.now() };
+  dispatch({ type: ADD_TOAST, payload: payloadWithDate });
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(dispatch({ type: REMOVE_TOAST, payload: payloadWithDate }));
+    }, 5000);
+  });
+};
+
+export const removeToast = (payload) => ({
+  type: REMOVE_TOAST,
   payload,
 });
 
@@ -119,6 +136,20 @@ export const storeReducer = (state, action) => {
         saved: updatedSavedSnippets,
       };
     }
+    case ADD_TOAST: {
+      return {
+        ...state,
+        toasts: [action.payload, ...state.toasts],
+      };
+    }
+    case REMOVE_TOAST: {
+      return {
+        ...state,
+        toasts: state.toasts.filter(
+          (toast) => toast.date !== action.payload.date
+        ),
+      };
+    }
     default: {
       return state;
     }
@@ -126,13 +157,14 @@ export const storeReducer = (state, action) => {
 };
 
 export const initialState = {
-  version: 3,
+  version: 5,
   currentTheme: "3024-day",
   currentLanguage: "javascript",
   fontSize: 8,
   lineNumbers: false,
   lineNumberStart: 0,
   saved: [],
+  toasts: [],
 };
 
 export const StoreContext = React.createContext();

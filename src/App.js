@@ -14,8 +14,11 @@ import {
   deleteCode,
   changeLanguage,
   updateCode,
+  removeToast,
+  addToast,
 } from "./contexts/store";
 import { OffscreenTable } from "./OffscreenTable";
+import { NotificationPanel } from "./NotificationPanel";
 
 function saveSnippet(state) {
   const serializedState = JSON.stringify(state);
@@ -59,6 +62,10 @@ function App() {
 
   return (
     <StoreContext.Provider value={state}>
+      <NotificationPanel
+        notifications={state.toasts}
+        removeToast={(payload) => dispatch(removeToast(payload))}
+      />
       <div className={`modal ${showModal ? "is-active" : ""}`}>
         <div className="modal-background" />
         <div className="modal-content">
@@ -91,6 +98,15 @@ function App() {
                       dispatch(saveCode(newSnippet));
                       setTitle("");
                       saveSnippet(state);
+                      dispatch(
+                        addToast(
+                          {
+                            message: `Created ${title}`,
+                            level: "success",
+                          },
+                          dispatch
+                        )
+                      );
                       setLastLoadedSnippet(newSnippet);
                       toggleModal();
                     }
@@ -147,71 +163,65 @@ function App() {
                     setValue(value);
                   }}
                 />
-                {value && (
-                  <div
-                    className="buttons"
-                    style={{
-                      position: "absolute",
-                      top: "10px",
-                      right: "10px",
-                      zIndex: 30,
+
+                <div className="buttons button-wrapper buttons-top">
+                  <button
+                    className="button is-danger	"
+                    disabled={Boolean(!value)}
+                    onClick={() => {
+                      setValue("");
+                      setLastLoadedSnippet("");
                     }}
                   >
-                    <button
-                      className="button is-danger	"
-                      onClick={() => {
-                        setValue("");
-                        setLastLoadedSnippet("");
-                      }}
-                    >
-                      Clear
-                    </button>
-                  </div>
-                )}
-                {value && (
-                  <div
-                    className="buttons"
-                    style={{
-                      position: "absolute",
-                      bottom: "10px",
-                      right: "10px",
-                      zIndex: 30,
-                    }}
-                  >
-                    <button
-                      className="button has-background-info-light	"
-                      onClick={() => {
-                        const updatedData = {
-                          text: value,
-                          date: lastLoadedSnippet.date,
-                          lang: state.currentLanguage,
-                          title: lastLoadedSnippet.title,
-                        };
-                        if (lastLoadedSnippet) {
-                          dispatch(updateCode(updatedData));
-                        } else {
-                          toggleModal();
-                        }
-                      }}
-                    >
-                      {lastLoadedSnippet ? "Save" : "Save as"}
-                    </button>
-                    <button
-                      className="button has-background-info-light	"
-                      onClick={() => {
-                        copyToClipboard(
-                          codeHTML.current.ref,
-                          state.lineNumbers,
-                          table.current,
-                          state.lineNumberStart,
-                          state.fontSize
+                    Clear
+                  </button>
+                </div>
+
+                <div className="buttons button-wrapper buttons-bottom">
+                  <button
+                    className="button has-background-info-light	"
+                    disabled={Boolean(!value)}
+                    onClick={() => {
+                      const updatedData = {
+                        text: value,
+                        date: lastLoadedSnippet.date,
+                        lang: state.currentLanguage,
+                        title: lastLoadedSnippet.title,
+                      };
+                      if (lastLoadedSnippet) {
+                        dispatch(
+                          addToast(
+                            {
+                              message: `Updates to ${lastLoadedSnippet.title} saved`,
+                              level: "success",
+                            },
+                            dispatch
+                          )
                         );
-                      }}
-                    >
-                      Copy
-                    </button>
-                  </div>
-                )}
+                        dispatch(updateCode(updatedData));
+                      } else {
+                        toggleModal();
+                      }
+                    }}
+                  >
+                    {lastLoadedSnippet ? "Save" : "Save as"}
+                  </button>
+                  <button
+                    className="button has-background-info-light	"
+                    disabled={Boolean(!value)}
+                    onClick={() => {
+                      copyToClipboard(
+                        codeHTML.current.ref,
+                        state.lineNumbers,
+                        table.current,
+                        state.lineNumberStart,
+                        state.fontSize
+                      );
+                    }}
+                  >
+                    Copy
+                  </button>
+                </div>
               </div>
 
               <div
@@ -250,6 +260,14 @@ function App() {
             </div>
             <div className="column"></div>
           </div>
+        </div>
+        <div style={{ textAlign: "center", marginTop: "40px", color: "white" }}>
+          <a
+            href="https://github.com/too-old-to-code/syntax-highlighter"
+            style={{ color: "white" }}
+          >
+            Github repo
+          </a>
         </div>
       </div>
     </StoreContext.Provider>

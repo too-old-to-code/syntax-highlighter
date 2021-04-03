@@ -8,6 +8,7 @@ import {
   changeFontSize,
   toggleLineNumbers,
   changeLineNumberStart,
+  addToast,
 } from "./contexts/store";
 
 const Options = ({ options }) => {
@@ -29,7 +30,21 @@ export const ControlPanel = ({ dispatch }) => {
           <input
             type="checkbox"
             checked={store.lineNumbers}
-            onChange={() => dispatch(toggleLineNumbers())}
+            onChange={async () => {
+              dispatch(toggleLineNumbers());
+              if (!store.lineNumbers) {
+                dispatch(
+                  addToast(
+                    {
+                      message:
+                        "The line numbers are not visible on this page but will be present when you paste into Word",
+                      date: Date.now(),
+                    },
+                    dispatch
+                  )
+                );
+              }
+            }}
           />
         </div>
       </div>

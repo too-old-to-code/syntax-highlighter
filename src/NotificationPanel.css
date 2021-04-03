@@ -1,0 +1,13 @@
+.notifications {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  padding: 20px;
+  z-index: 40;
+  width: 500px;
+  max-width: 100%;
+}
+
+.notification {
+  margin: 5px !important;
+}

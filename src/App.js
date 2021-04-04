@@ -19,6 +19,7 @@ import {
 } from "./contexts/store";
 import { OffscreenTable } from "./OffscreenTable";
 import { NotificationPanel } from "./NotificationPanel";
+import { SaveSnippetModal } from "./modals/SaveSnippetModal";
 
 function saveSnippet(state) {
   const serializedState = JSON.stringify(state);
@@ -66,65 +67,20 @@ function App() {
         notifications={state.toasts}
         removeToast={(payload) => dispatch(removeToast(payload))}
       />
-      <div className={`modal ${showModal ? "is-active" : ""}`}>
-        <div className="modal-background" />
-        <div className="modal-content">
-          <div className="card">
-            <div className="card-content">
-              <div className="content">
-                What will you save your code snippet as? The snippet will be
-                stored in your browser storage.
-              </div>
-              <div className="content">
-                <input
-                  className="input"
-                  value={title}
-                  onChange={({ target }) => setTitle(target.value)}
-                  type="text"
-                  placeholder="Text input"
-                ></input>
-              </div>
-              <div className="buttons is-right">
-                <button
-                  className="button is-success is-right"
-                  onClick={() => {
-                    const newSnippet = {
-                      text: value,
-                      date: Date.now(),
-                      lang: state.currentLanguage,
-                      title: title,
-                    };
-                    if (title) {
-                      dispatch(saveCode(newSnippet));
-                      setTitle("");
-                      saveSnippet(state);
-                      dispatch(
-                        addToast(
-                          {
-                            message: `Created ${title}`,
-                            level: "success",
-                          },
-                          dispatch
-                        )
-                      );
-                      setLastLoadedSnippet(newSnippet);
-                      toggleModal();
-                    }
-                  }}
-                >
-                  OK
-                </button>
-                <button
-                  className="button is-danger is-right"
-                  onClick={toggleModal}
-                >
-                  Cancel
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      <SaveSnippetModal
+        showModal={showModal}
+        title={title}
+        setTitle={setTitle}
+        state={state}
+        value={value}
+        toggleModal={toggleModal}
+        dispatch={dispatch}
+        addToast={addToast}
+        saveCode={saveCode}
+        saveSnippet={saveSnippet}
+        setLastLoadedSnippet={setLastLoadedSnippet}
+      />
+
       <div className="App has-background-info-dark">
         <OffscreenTable ref={table} fontSize={state.fontSize} />
         <div className="container">

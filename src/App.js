@@ -111,6 +111,7 @@ function App() {
                     firstLineNumber: 22,
                     theme: state.currentTheme,
                     inputStyle: "contenteditable",
+                    viewportMargin: Infinity,
                   }}
                   onBeforeChange={(editor, data, value) => {
                     if (!value) {

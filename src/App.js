@@ -86,10 +86,10 @@ function App() {
         <div className="container">
           <PageTitle text="Code syntax highlighter for Word" />
 
-          <ControlPanel dispatch={dispatch} />
-
           <div className="columns">
-            <div className="column"></div>
+            <div className="column">
+              <ControlPanel dispatch={dispatch} />
+            </div>
             <div className="column is-half" style={{ position: "relative" }}>
               <div
                 style={{

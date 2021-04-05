@@ -8,4 +8,5 @@ export const languageOptions = [
   { value: "python", text: "Python" },
   { value: "sql", text: "SQL" },
   { value: "text/x-java", text: "Java" },
+  { value: "text/typescript-jsx", text: "JSX" },
 ];
